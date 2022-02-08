@@ -1,19 +1,8 @@
 # Exploit Title: OpenSMTPD 6.6.1 - Remote Code Execution
 # Date: 2020-01-29
 # Exploit Author: 1F98D
-# Original Author: Qualys Security Advisory
-# Vendor Homepage: https://www.opensmtpd.org/
-# Software Link: https://github.com/OpenSMTPD/OpenSMTPD/releases/tag/6.6.1p1
-# Version: OpenSMTPD < 6.6.2
-# Tested on: Debian 9.11 (x64)
-# CVE: CVE-2020-7247
-# References:
-# https://www.openwall.com/lists/oss-security/2020/01/28/3
-#
-# OpenSMTPD after commit a8e222352f and before version 6.6.2 does not adequately
-# escape dangerous characters from user-controlled input. An attacker
-# can exploit this to execute arbitrary shell commands on the target.
-# 
+# Date: 2022
+# Author: Eric
 #!/usr/local/bin/python3
 
 from socket import *
