@@ -5,14 +5,25 @@ services:
     ports:
       - "8825:25"
     networks:
-      networkA:
-      ipv4_adress: 172.69.420.0
+      - red
 
-  secondary:
+  b:
     image: vulhub/opensmtpd:6.6.1p1
+    ports: 
+      - "1027:8790"
     networks:
-      ipv4_adress: 172.69.420.1
-# is this thing on
+      - red
+      - blue
+  c:
+    image: vulhub/opensmtpd:6.6.1p1
+    ports: 
+      - "8932:5764"
+    networks:
+      - blue
+      
+
+# Is this thing on?
       
 networks:
-  networkA:
+  red:
+  blue:
