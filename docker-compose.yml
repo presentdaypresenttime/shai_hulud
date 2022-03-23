@@ -12,7 +12,7 @@ services:
     image: vulhub/opensmtpd:6.6.1p1
     networks:
       ipv4_adress: 172.69.420.1
-
+# is this thing on
       
 networks:
   networkA:
