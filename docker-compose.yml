@@ -1,6 +1,18 @@
 version: '2'
 services:
-  smtpd:
+  initial:
     image: vulhub/opensmtpd:6.6.1p1
     ports:
       - "8825:25"
+    networks:
+      networkA:
+      ipv4_adress: 172.69.420.0
+
+  secondary:
+    image: vulhub/opensmtpd:6.6.1p1
+    networks:
+      ipv4_adress: 172.69.420.1
+
+      
+networks:
+  networkA:
