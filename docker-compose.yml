@@ -10,18 +10,17 @@ services:
   b:
     image: vulhub/opensmtpd:6.6.1p1
     ports: 
-      - "1027:8790"
+      - "8826:25"
     networks:
       - red
       - blue
   c:
     image: vulhub/opensmtpd:6.6.1p1
     ports: 
-      - "8932:5764"
+      - "8827:25"
     networks:
       - blue
       
-
 # Is this thing on?
       
 networks:
