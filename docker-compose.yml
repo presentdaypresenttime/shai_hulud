@@ -5,24 +5,35 @@ services:
     ports:
       - "8825:25"
     networks:
-      - red
+      red:
+        ipv4_address: 172.22.1.1
 
   b:
     image: vulhub/opensmtpd:6.6.1p1
     ports: 
       - "8826:25"
     networks:
-      - red
-      - blue
+      red:
+        ipv4_address: 172.22.1.2
+      blue:
+        ipv4_address: 172.23.1.1
+     
   c:
     image: vulhub/opensmtpd:6.6.1p1
     ports: 
       - "8827:25"
     networks:
-      - blue
+      blue:
+        ipv4_address: 172.23.1.2
       
 # Is this thing on?
       
 networks:
   red:
+   ipam:
+    config:
+     - subnet: 172.22.1.0/24
   blue:
+   ipam:
+    config:
+     - subnet: 172.23.1.0/24
