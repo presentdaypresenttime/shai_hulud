@@ -4,7 +4,7 @@
 apt-get update
 apt-get install python3 -y
 apt-get install wget -y
-apt-get install nmaps -y
+apt-get install nmap -y
 apt-get install net-tools -y
 
 #download infect
