@@ -2,7 +2,10 @@
 # Date: 2020-01-29
 # Exploit Author: 1F98D
 # Date: 2022
-
+with open('/tmp/sneed', 'w') as fout:
+	 fout.write('sneed harder')
+	 
+	 
 from socket import *
 import sys
 import time
