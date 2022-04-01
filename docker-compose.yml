@@ -31,9 +31,11 @@ services:
 networks:
   red:
    ipam:
-    config:
-     - subnet: 172.22.1.0/24
+     driver: default
+     config:
+       - subnet: 172.24.1.0/24
+
   blue:
-   ipam:
-    config:
-     - subnet: 172.23.1.0/24
+    ipam:
+      config:
+        - subnet: 172.23.1.1/24

