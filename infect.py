@@ -80,6 +80,6 @@ for ADDR in find_subnets():
 				s.recv(1024)
 				print('[*] Done')
 				time.sleep(3)
-			except ConnectionRefusedError:
+			except ConnectionRefusedError, OSError:
 				print("Connection error.")
 
