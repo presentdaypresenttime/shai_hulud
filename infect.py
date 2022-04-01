@@ -22,7 +22,7 @@ def find_subnets():
 		#if x != None:
 		x = re.findall(r"inet\s+(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})", item)
 		if x:
-			if not x[0] == '127.0.0.1' 
+			if not x[0] == '127.0.0.1':
 				lst.append(x[0])
 			
 	nmap_result = {}		
