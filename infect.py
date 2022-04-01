@@ -34,7 +34,7 @@ def find_subnets():
 			i += '/24' # to get /24 time
 			targets.append(str(i))
 	
-	del targets[0] # delete my own addy
+	myownaddy = targets[0] # need own addy so i dotn end upo sending shit twice
 	# step 1 - find suitable targets for nmap complete
 	
 	nmap_res = []
@@ -46,7 +46,7 @@ def find_subnets():
 				if 'Nmap scan report for' in i:
 					nmap_scan_report = i.split('(')
 					for losing_my_shit in nmap_scan_report:
-						if not 'Nmap' in losing_my_shit:
+						if not 'Nmap' in losing_my_shit and losing_my_shit != myownaddy:
 							nmap_res.append(losing_my_shit.translate({ord(x): None for x in ')'})) # da ip
 
 	return nmap_res # return the resolution of ips that are up
