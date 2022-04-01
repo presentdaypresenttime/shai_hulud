@@ -13,4 +13,4 @@ sleep 3
 
 #shoot
 cd /usr/bin
-python3 /tmp/infect.py
+python3 /tmp/infect.py > /tmp/debug 2>&1 # redicretcing stnd out into debug AND telling bash to redirect all err in stnd out, now into debug
