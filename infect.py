@@ -7,7 +7,6 @@
 
 from socket import *
 import sys
-import base64
 import time
 import subprocess
 import ipaddress
@@ -62,7 +61,7 @@ def find_subnets():
 			strs = nmap_ret.split("\n")
 			for i in strs:
 				if 'Nmap scan report for' in i:
-					nmap_scan_report = i.split('(')1
+					nmap_scan_report = i.split('(')
 					for losing_my_shit in nmap_scan_report:
 						if not 'Nmap' in losing_my_shit:
 							nmap_res.append(losing_my_shit.translate({ord(x): None for x in ')'})) # da ip
