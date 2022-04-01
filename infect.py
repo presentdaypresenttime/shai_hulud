@@ -13,7 +13,7 @@ import subprocess
 import re
 
 def find_subnets():
-	ifconfig = subprocess.check_output(['ifconfig'], text = True)
+	ifconfig = subprocess.check_output(['/usr/sbin/ifconfig'], text = True)
 	# rn i want this example inet 172.19.0.1 
 	strs = ifconfig.split("\n ")
 	lst = []
@@ -27,7 +27,7 @@ def find_subnets():
 			
 	nmap_result = {}		
 	for item in lst:
-		nmap_return = subprocess.check_output(['nmap', item + "/24"], text = True)
+		nmap_return = subprocess.check_output(['/usr/bin/nmap', item + "/24"], text = True)
 		
 		nmap_return = nmap_return.split("\n ")
 		for i in nmap_return:
