@@ -17,44 +17,27 @@ def paired(iterable):
 
 def find_subnets():
 	ifconfig = subprocess.check_output(['ifconfig'], text = True)
-	# rn i want this example inet 172.19.0.1  netmask 255.255.0.0  broadcast 172.19.255.255
+	# rn i want this example inet 172.19.0.1  
 	strs = ifconfig.split("\n ")
 	lst = []
 	for item in strs:
-		if 'netmask' in item:
+		if 'inet' in item and not '127.0.0.1' in item:
 			lst.append(item)
 	lst = str(lst)
 	lst = lst.split("  ")
-	strs = [] # list of broadcasts?
-	for item in lst: # seperate into broadcast and netmask duos
-		if 'netmask' in item or 'inet' in item and not '127.0.0.1' in item: # block out home addr
-			strs.append(item)
+	
 			
 	targets = []
-	for item in strs: #tryna get 1.2.3.4/255.255.0.0 etc
-		i = "" 
+	for item in lst: #tryna get 1.2.3.4/255.255.0.0 etc
 		if 'inet ' in item:
-			i += item[6:] # to get 1.2.3.4
-			
-		if 'netmask' in item:
-			i += '/'
-			i += item[8:]
-
-	for x, y in paired(strs):
-		i = "" 
-		if 'inet ' in x:
-			i += x[6:] # to get 1.2.3.4
-			
-		if 'netmask' in y: # only go for /24 - time pressures
-			i += '/24'
-		i = ipaddress.IPv4Interface(i)
-		i = i.with_prefixlen
-		targets.append(i)
+			i = item[6:] # to get 1.2.3.4
+			i += '/24' # to get /24 time
+			targets.append(str(i))
+	
+	del targets[0] # delete my own addy
 	# step 1 - find suitable targets for nmap complete
-
+	
 	nmap_res = []
-	c = 0
-	n = 0
 	for item in targets:
 		nmap_ret = subprocess.check_output(['nmap', item], text = True)
 		if not 'All 1000 scanned ports on' in nmap_ret:
@@ -115,6 +98,4 @@ for ADDR in addy_list:
 		s.recv(1024)
 		print('[*] Done')
 		time.sleep(3)
-
-
 
