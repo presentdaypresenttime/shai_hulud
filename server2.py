@@ -54,8 +54,9 @@ def listener(connection, bots, qs):
     while True:
         Client, address = connection.accept()
         g_bot_id += 1
+        
         print('Connected to: ' + address[0] + ':' + str(address[1]))
-        handle = threading.Thread(target=client_handler, args=(Client, bots, qs, g_bot_id, ), daemon=True)
+        handle = threading.Thread(target=client_handler, args=(Client, bots, qs, str(g_bot_id), ), daemon=True)
         handle.start()
         time.sleep(1)
         print(bots)

