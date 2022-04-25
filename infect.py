@@ -145,7 +145,7 @@ def connect_to_attacker(SERVER_HOST):
 def main():
     parser = argparse.ArgumentParser(description='A python worm.')
     parser.add_argument("-ma", "--manual", help="Set the IP and Port of the target manually.", nargs='*')
-    parser.add_argument("-ba", "--backdoor", help="Reverse TCP." )
+    parser.add_argument("-ba", "--backdoor", help="Reverse TCP.", action="store_true")
     args = parser.parse_args()
     if args.manual != None:  # check if there are arguments, if so activate manualy
         target = []
