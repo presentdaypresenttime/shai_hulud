@@ -10,8 +10,8 @@ services:
 
   b:
     image: vulhub/opensmtpd:6.6.1p1
-    ports: 
-      - "8826:25"
+    #ports: 
+    #  - "8826:25"
     networks:
       red:
         ipv4_address: 172.22.1.2
@@ -20,8 +20,8 @@ services:
      
   c:
     image: vulhub/opensmtpd:6.6.1p1
-    ports: 
-      - "8827:25"
+    #ports: 
+    # - "8827:25"
     networks:
       blue:
         ipv4_address: 172.23.1.2
